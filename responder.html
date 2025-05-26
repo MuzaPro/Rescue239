@@ -2,175 +2,348 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SAR Quick-Tap Demo</title>
-  <style>
-    :root {
-      --black: #1a1a1a;
-      --red: #d9534f;
-      --yellow: #f0ad4e;
-      --green: #5cb85c;
-      --tile-bg: #ffffff;
-      --tile-border: #e0e0e0;
-      --font-stack: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    }
-    * {box-sizing: border-box; margin: 0; padding: 0;}
-    body {
-      font-family: var(--font-stack);
-      background: #fafafa;
-      color: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 12px;
-      min-height: 100vh;
-    }
-
-    /* GPS banner */
-    .banner {
-      background: var(--green);
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    /* Site header */
-    h1 {font-size: 1.6rem; margin-bottom: 12px; text-align: center;}
-
-    /* Casualty tiles */
-    .tile {
-      width: 100%;
-      max-width: 380px;
-      background: var(--tile-bg);
-      border: 2px solid var(--tile-border);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      margin-bottom: 10px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
-    }
-    .tile .icon {font-size: 1.8rem; width: 36px; text-align: center;}
-    .tile .label {flex: 1; font-size: 1.1rem; font-weight: 600; margin-left: 8px;}
-    .tile .controls {display: flex; align-items: center; gap: 8px;}
-    .tile button {
-      width: 36px; height: 36px; font-size: 1.4rem;
-      border: none; border-radius: 8px; background: #ececec; color: #000;
-    }
-    .tile .count {width: 34px; text-align: center; font-size: 1.2rem;}
-
-    /* Update button */
-    #update {
-      width: 100%; max-width: 380px; padding: 14px 0; font-size: 1.2rem;
-      font-weight: 700; border: none; border-radius: 12px; background: var(--green);
-      color: #fff; margin-top: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
-      transition: opacity .2s, transform .1s;
-    }
-    #update:disabled {opacity: .6;}
-    #update:not(:disabled):active {transform: scale(.97);} 
-
-    /* Last sync */
-    #last-sync {margin-top: 6px; font-size: .85rem; color: #555;}
-
-    /* Desktop refinements */
-    @media (min-width: 600px){h1{font-size:2rem;} .tile{padding:12px 20px;} .tile .label{font-size:1.25rem;}}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>RESCUE 239 - Field Report</title>
+  <link rel="stylesheet" href="responder.css">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
-  <!-- GPS accuracy banner (placeholder) -->
-  <div class="banner" id="gps-banner">GPS: 5 m ✓</div>
-
-  <!-- Worksite code -->
-  <h1 id="site-code">Site A-12</h1>
-
-  <!-- Casualty category tiles -->
-  <div class="tile" data-cat="dead">
-    <div class="icon">✖︎</div>
-    <div class="label">Dead</div>
-    <div class="controls">
-      <button class="minus" aria-label="minus dead">−</button>
-      <span class="count" id="dead-count">0</span>
-      <button class="plus" aria-label="plus dead">+</button>
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="unit-badge">
+      <img src="assets/homefront_logo.png" alt="IDF" class="unit-logo">
+      <div class="unit-info">
+        <div class="unit-name">Rescue 239</div>
+        <div class="site-code" id="site-code">Site A-12</div>
+      </div>
     </div>
-  </div>
-
-  <div class="tile" data-cat="immediate">
-    <div class="icon" style="color:var(--red)">✚</div>
-    <div class="label">Immediate</div>
-    <div class="controls">
-      <button class="minus" aria-label="minus immediate">−</button>
-      <span class="count" id="immediate-count">0</span>
-      <button class="plus" aria-label="plus immediate">+</button>
+    
+    <!-- GPS Status -->
+    <div class="gps-banner good" id="gps-banner">
+      <span>
+        <svg class="gps-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+        GPS: <span id="gps-accuracy">5</span>m
+      </span>
+      <span>✓</span>
     </div>
-  </div>
+  </header>
 
-  <div class="tile" data-cat="delayed">
-    <div class="icon" style="color:var(--yellow)">⚠︎</div>
-    <div class="label">Delayed</div>
-    <div class="controls">
-      <button class="minus" aria-label="minus delayed">−</button>
-      <span class="count" id="delayed-count">0</span>
-      <button class="plus" aria-label="plus delayed">+</button>
+  <!-- Casualty Count Grid -->
+  <main>
+    <div class="casualty-grid">
+      <!-- X (Deceased) -->
+      <div class="casualty-tile x" data-category="x">
+        <div class="tile-header">
+          <div class="tile-icon x">X</div>
+          <div class="tile-label">X</div>
+        </div>
+        <div class="tile-controls">
+          <button class="count-button minus" aria-label="Decrease X count">−</button>
+          <span class="count-display" id="count-x">0</span>
+          <button class="count-button plus" aria-label="Increase X count">+</button>
+        </div>
+      </div>
+
+      <!-- Critical -->
+      <div class="casualty-tile critical" data-category="critical">
+        <div class="tile-header">
+          <div class="tile-icon critical">!</div>
+          <div class="tile-label">Critical</div>
+        </div>
+        <div class="tile-controls">
+          <button class="count-button minus" aria-label="Decrease critical count">−</button>
+          <span class="count-display" id="count-critical">0</span>
+          <button class="count-button plus" aria-label="Increase critical count">+</button>
+        </div>
+      </div>
+
+      <!-- Delayed -->
+      <div class="casualty-tile delayed" data-category="delayed">
+        <div class="tile-header">
+          <div class="tile-icon delayed">⏱</div>
+          <div class="tile-label">Delayed</div>
+        </div>
+        <div class="tile-controls">
+          <button class="count-button minus" aria-label="Decrease delayed count">−</button>
+          <span class="count-display" id="count-delayed">0</span>
+          <button class="count-button plus" aria-label="Increase delayed count">+</button>
+        </div>
+      </div>
+
+      <!-- Evacuated -->
+      <div class="casualty-tile evac" data-category="evac">
+        <div class="tile-header">
+          <div class="tile-icon evac">✓</div>
+          <div class="tile-label">Evacuated</div>
+        </div>
+        <div class="tile-controls">
+          <button class="count-button minus" aria-label="Decrease evacuated count">−</button>
+          <span class="count-display" id="count-evac">0</span>
+          <button class="count-button plus" aria-label="Increase evacuated count">+</button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="tile" data-cat="evac">
-    <div class="icon" style="color:var(--green)">🏥</div>
-    <div class="label">Evac</div>
-    <div class="controls">
-      <button class="minus" aria-label="minus evac">−</button>
-      <span class="count" id="evac-count">0</span>
-      <button class="plus" aria-label="plus evac">+</button>
+    <!-- Update Action -->
+    <div class="action-section">
+      <button class="update-button" id="update-button" disabled>UPDATE COUNTS</button>
+      <div class="sync-status" id="sync-status">Ready</div>
     </div>
-  </div>
 
-  <!-- Update button -->
-  <button id="update" disabled>UPDATE</button>
-  <div id="last-sync">Last sync: —</div>
+    <!-- Quick Message Section -->
+    <div class="message-section">
+      <h3 class="message-header">Quick Update</h3>
+      
+      <!-- Quick Templates -->
+      <div class="quick-templates">
+        <span class="template-chip" data-template="Gas leak detected">Gas leak</span>
+        <span class="template-chip" data-template="Structural damage - need engineer">Structural damage</span>
+        <span class="template-chip" data-template="Medical supplies needed">Medical supplies</span>
+        <span class="template-chip" data-template="Additional personnel required">Need backup</span>
+        <span class="template-chip" data-template="Area secured">Area secured</span>
+      </div>
+      
+      <!-- Message Input -->
+      <div class="message-input-group">
+        <input 
+          type="text" 
+          class="message-input" 
+          id="message-input" 
+          placeholder="Type update message..."
+          maxlength="200"
+        >
+        <button class="send-button" id="send-button">
+          <svg class="send-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+          Send
+        </button>
+      </div>
+      
+      <!-- Message Log -->
+      <div class="message-log" id="message-log">
+        <!-- Messages will appear here -->
+      </div>
+    </div>
+  </main>
 
-<script>
-  // Mockup JS to drive the demo (offline-only)
-  const counts = {dead:0, immediate:0, delayed:0, evac:0};
-  const updateBtn = document.getElementById('update');
-  const lastSync = document.getElementById('last-sync');
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div>Team Leader: <span id="team-leader">Avishai</span> | v0.1</div>
+  </footer>
 
-  // Attach listeners to plus/minus
-  document.querySelectorAll('.tile').forEach(tile=>{
-    const cat = tile.dataset.cat;
-    const countEl = tile.querySelector('.count');
-    tile.addEventListener('click', e=>{
-      if(e.target.matches('.plus')) counts[cat]++;
-      if(e.target.matches('.minus')) counts[cat] = Math.max(0, counts[cat]-1);
-      countEl.textContent = counts[cat];
-      updateBtn.disabled = false;
-    });
-  });
+  <script>
+    // State management
+    const state = {
+      counts: { x: 0, critical: 0, delayed: 0, evac: 0 },
+      originalCounts: { x: 0, critical: 0, delayed: 0, evac: 0 },
+      messages: [],
+      teamLeader: 'Avishai'
+    };
 
-  // Simple UPDATE behaviour
-  updateBtn.addEventListener('click', ()=>{
-    // Simulate sending and success
-    updateBtn.disabled = true;
-    const now = new Date();
-    lastSync.textContent = 'Last sync: '+ now.toLocaleTimeString();
-    // Small vibration if supported
-    if(navigator.vibrate) navigator.vibrate(150);
-  });
+    // DOM elements
+    const elements = {
+      updateButton: document.getElementById('update-button'),
+      syncStatus: document.getElementById('sync-status'),
+      messageInput: document.getElementById('message-input'),
+      sendButton: document.getElementById('send-button'),
+      messageLog: document.getElementById('message-log'),
+      gpsBanner: document.getElementById('gps-banner'),
+      gpsAccuracy: document.getElementById('gps-accuracy')
+    };
 
-  // Mock GPS accuracy ticker (loop)
-  const gpsBanner = document.getElementById('gps-banner');
-  let accuracy = 5;
-  setInterval(()=>{
-    accuracy = Math.floor(Math.random()*80)+5; // 5–85 m
-    let color = 'var(--green)';
-    if(accuracy>50) color = 'var(--yellow)';
-    if(accuracy>100) color = 'var(--red)';
-    gpsBanner.style.background = color;
-    gpsBanner.textContent = `GPS: ${accuracy} m ✓`;
-  }, 4000);
-</script>
+    // Initialize
+    function init() {
+      setupEventListeners();
+      updateCountDisplays();
+      mockGPSUpdates();
+      loadFromLocalStorage();
+    }
 
+    // Event listeners
+    function setupEventListeners() {
+      // Count buttons
+      document.querySelectorAll('.casualty-tile').forEach(tile => {
+        const category = tile.dataset.category;
+        const countEl = tile.querySelector('.count-display');
+        
+        tile.addEventListener('click', (e) => {
+          if (e.target.classList.contains('plus')) {
+            state.counts[category]++;
+            updateCount(category, countEl);
+          } else if (e.target.classList.contains('minus')) {
+            state.counts[category] = Math.max(0, state.counts[category] - 1);
+            updateCount(category, countEl);
+          }
+        });
+      });
+
+      // Update button
+      elements.updateButton.addEventListener('click', handleUpdate);
+
+      // Message system
+      elements.sendButton.addEventListener('click', sendMessage);
+      elements.messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+      });
+
+      // Quick templates
+      document.querySelectorAll('.template-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          elements.messageInput.value = chip.dataset.template;
+          elements.messageInput.focus();
+        });
+      });
+    }
+
+    // Update count display
+    function updateCount(category, element) {
+      element.textContent = state.counts[category];
+      checkForChanges();
+      
+      // Visual feedback
+      const tile = element.closest('.casualty-tile');
+      tile.classList.add('modified');
+    }
+
+    // Check if counts have changed
+    function checkForChanges() {
+      const hasChanges = Object.keys(state.counts).some(
+        key => state.counts[key] !== state.originalCounts[key]
+      );
+      
+      elements.updateButton.disabled = !hasChanges;
+    }
+
+    // Update all count displays
+    function updateCountDisplays() {
+      Object.keys(state.counts).forEach(category => {
+        document.getElementById(`count-${category}`).textContent = state.counts[category];
+      });
+    }
+
+    // Handle update button click
+    async function handleUpdate() {
+      elements.updateButton.disabled = true;
+      elements.syncStatus.textContent = 'Syncing...';
+      elements.syncStatus.classList.add('syncing');
+
+      // Simulate API call
+      await simulateSync();
+
+      // Update original counts
+      state.originalCounts = { ...state.counts };
+      
+      // Clear modified states
+      document.querySelectorAll('.casualty-tile').forEach(tile => {
+        tile.classList.remove('modified');
+      });
+
+      // Success feedback
+      elements.syncStatus.textContent = `Synced at ${new Date().toLocaleTimeString()}`;
+      elements.syncStatus.classList.remove('syncing');
+      
+      // Haptic feedback
+      if (navigator.vibrate) navigator.vibrate(150);
+
+      // Save to local storage
+      saveToLocalStorage();
+    }
+
+    // Send message
+    async function sendMessage() {
+      const message = elements.messageInput.value.trim();
+      if (!message) return;
+
+      // Add to log
+      const timestamp = new Date().toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+      
+      const messageItem = {
+        time: timestamp,
+        text: message,
+        status: 'sending'
+      };
+
+      state.messages.unshift(messageItem);
+      renderMessages();
+
+      // Clear input
+      elements.messageInput.value = '';
+
+      // Simulate send
+      await simulateSync();
+      
+      // Update status
+      messageItem.status = 'sent';
+      renderMessages();
+
+      // Haptic feedback
+      if (navigator.vibrate) navigator.vibrate(100);
+
+      // Save to local storage
+      saveToLocalStorage();
+    }
+
+    // Render message log
+    function renderMessages() {
+      elements.messageLog.innerHTML = state.messages.map(msg => `
+        <div class="message-item">
+          <span class="message-time">${msg.time}</span>
+          <span class="message-text">${msg.text}</span>
+          <span class="message-status">
+            ${msg.status === 'sent' ? '✓' : '...'}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    // Mock GPS updates
+    function mockGPSUpdates() {
+      setInterval(() => {
+        const accuracy = Math.floor(Math.random() * 100) + 5;
+        elements.gpsAccuracy.textContent = accuracy;
+        
+        // Update banner style
+        elements.gpsBanner.classList.remove('good', 'warning', 'error');
+        if (accuracy <= 50) {
+          elements.gpsBanner.classList.add('good');
+        } else if (accuracy <= 100) {
+          elements.gpsBanner.classList.add('warning');
+        } else {
+          elements.gpsBanner.classList.add('error');
+        }
+      }, 4000);
+    }
+
+    // Simulate sync delay
+    function simulateSync() {
+      return new Promise(resolve => setTimeout(resolve, 800));
+    }
+
+    // Local storage
+    function saveToLocalStorage() {
+      localStorage.setItem('rescue239_state', JSON.stringify(state));
+    }
+
+    function loadFromLocalStorage() {
+      const saved = localStorage.getItem('rescue239_state');
+      if (saved) {
+        const savedState = JSON.parse(saved);
+        Object.assign(state, savedState);
+        state.originalCounts = { ...state.counts };
+        updateCountDisplays();
+        renderMessages();
+      }
+    }
+
+    // Initialize app
+    init();
+  </script>
 </body>
 </html>

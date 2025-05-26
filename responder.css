@@ -1,0 +1,512 @@
+/* ========== IDF HOME FRONT COMMAND - RESCUE 239 FIELD APP ========== */
+
+/* ---------- Color Palette ------------- */
+:root {
+  /* Home Front Command Colors */
+  --hfc-black: #000000;
+  --hfc-platinum: #E8E8E8;
+  --hfc-blue: #26AAFE;
+  --hfc-orange: #F79823;
+  --hfc-navy: #176699;
+  
+  /* Semantic Colors */
+  --color-x: #666666;           /* Gray for X (deceased) */
+  --color-critical: #F79823;    /* Orange for immediate/critical */
+  --color-delayed: #26AAFE;     /* Blue for delayed */
+  --color-evac: #176699;        /* Navy for evacuated */
+  
+  /* UI Colors */
+  --bg-primary: #FAFAFA;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F6F6F6;
+  --border: #E8E8E8;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-dim: #666666;
+  
+  /* Status Colors */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #DC2626;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #0A0A0A;
+    --bg-secondary: #1A1A1A;
+    --bg-tertiary: #262626;
+    --border: #333333;
+    --text-primary: #FFFFFF;
+    --text-secondary: #E8E8E8;
+    --text-dim: #999999;
+  }
+}
+
+/* ---------- Base Styles ------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 12px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ---------- Header Section ------------- */
+.app-header {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.unit-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.unit-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.unit-info {
+  flex: 1;
+}
+
+.unit-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.site-code {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--hfc-navy);
+}
+
+/* ---------- GPS Status Banner ------------- */
+.gps-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.gps-banner.good {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+}
+
+.gps-banner.warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #F59E0B;
+}
+
+.gps-banner.error {
+  background: rgba(220, 38, 38, 0.1);
+  color: #DC2626;
+}
+
+.gps-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+/* ---------- Casualty Tiles ------------- */
+.casualty-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.casualty-tile {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.casualty-tile.x {
+  border-color: var(--color-x);
+}
+
+.casualty-tile.critical {
+  border-color: var(--color-critical);
+}
+
+.casualty-tile.delayed {
+  border-color: var(--color-delayed);
+}
+
+.casualty-tile.evac {
+  border-color: var(--color-evac);
+}
+
+.casualty-tile.modified::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: currentColor;
+}
+
+.tile-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.tile-icon {
+  font-size: 1.5rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: currentColor;
+  color: white;
+  opacity: 0.9;
+}
+
+.tile-icon.x {
+  background: var(--color-x);
+}
+
+.tile-icon.critical {
+  background: var(--color-critical);
+}
+
+.tile-icon.delayed {
+  background: var(--color-delayed);
+}
+
+.tile-icon.evac {
+  background: var(--color-evac);
+}
+
+.tile-label {
+  flex: 1;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.tile-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+.count-button {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.count-button:hover {
+  background: var(--border);
+}
+
+.count-button:active {
+  transform: scale(0.95);
+}
+
+.count-display {
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* ---------- Action Buttons ------------- */
+.action-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.update-button {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  background: var(--hfc-orange);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 8px rgba(247, 152, 35, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.update-button:not(:disabled):hover {
+  background: #E68A1F;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(247, 152, 35, 0.4);
+}
+
+.update-button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.update-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sync-status {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  margin-top: -8px;
+}
+
+/* ---------- Quick Message Section ------------- */
+.message-section {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.message-header {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.message-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.message-input {
+  flex: 1;
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.message-input:focus {
+  outline: none;
+  border-color: var(--hfc-blue);
+  background: var(--bg-secondary);
+}
+
+.message-input::placeholder {
+  color: var(--text-dim);
+}
+
+.send-button {
+  padding: 12px 20px;
+  background: var(--hfc-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.send-button:hover {
+  background: #1A9AEE;
+  transform: translateY(-1px);
+}
+
+.send-button:active {
+  transform: scale(0.98);
+}
+
+.send-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Message Log ------------- */
+.message-log {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.message-time {
+  color: var(--text-dim);
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.message-text {
+  flex: 1;
+  color: var(--text-primary);
+}
+
+.message-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--success);
+  font-size: 0.75rem;
+}
+
+/* ---------- Quick Templates ------------- */
+.quick-templates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.template-chip {
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.template-chip:hover {
+  background: var(--hfc-blue);
+  color: white;
+  border-color: var(--hfc-blue);
+}
+
+/* ---------- Footer ------------- */
+.app-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ---------- Loading & Animations ------------- */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.syncing {
+  animation: pulse 1s infinite;
+}
+
+/* ---------- Scrollbar Styling ------------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
+/* ---------- Responsive Adjustments ------------- */
+@media (max-width: 400px) {
+  body {
+    padding: 8px;
+  }
+  
+  .casualty-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .quick-templates {
+    display: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .casualty-tile {
+    padding: 20px;
+  }
+  
+  .count-display {
+    font-size: 2.5rem;
+  }
+}

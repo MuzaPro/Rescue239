@@ -2,55 +2,48 @@
 
 /* ---------- Color Palette ------------- */
 :root {
-  /* Home Front Command Colors */
-  --hfc-black: #000000;
-  --hfc-platinum: #E8E8E8;
-  --hfc-blue: #26AAFE;
-  --hfc-orange: #F79823;
-  --hfc-navy: #176699;
-  
   /* Operational Status Colors */
-  --critical: #F79823;  /* Orange for critical/X */
-  --warning: #26AAFE;   /* Blue for warning */
-  --stable: #176699;    /* Navy for stable */
-  --inactive: #666666;  /* Gray for inactive */
+  --critical: #dc2626;
+  --warning: #f59e0b;
+  --stable: #10b981;
+  --inactive: #6b7280;
   
   /* Light Mode (Default - Desert Operations) */
-  --bg-primary: #FAFAFA;
-  --bg-secondary: #FFFFFF;
-  --bg-tertiary: #F6F6F6;
-  --border: #E8E8E8;
-  --border-active: #999999;
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f3f4f6;
+  --border: #d1d5db;
+  --border-active: #9ca3af;
   
-  --text-primary: #000000;
-  --text-secondary: #333333;
-  --text-dim: #666666;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-dim: #9ca3af;
   
-  --accent: #F79823;        /* Orange for primary actions */
-  --accent-hover: #E68A1F;  /* Darker orange on hover */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
   
   /* Map specific */
-  --map-bg: #F3F4F6;
+  --map-bg: #e5e7eb;
   --map-grid: rgba(0, 0, 0, 0.05);
 }
 
 /* Dark Mode */
 body.dark {
-  --bg-primary: #0A0A0A;
-  --bg-secondary: #1A1A1A;
-  --bg-tertiary: #262626;
-  --border: #333333;
-  --border-active: #4D4D4D;
+  --bg-primary: #0f1419;
+  --bg-secondary: #1a1f2e;
+  --bg-tertiary: #232937;
+  --border: #374151;
+  --border-active: #4b5563;
   
-  --text-primary: #FFFFFF;
-  --text-secondary: #E8E8E8;
-  --text-dim: #999999;
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-dim: #6b7280;
   
-  --accent: #F79823;        /* Orange stays vibrant in dark mode */
-  --accent-hover: #FFB04D;  /* Lighter orange on hover in dark */
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
   
-  --map-bg: #0F0F0F;
-  --map-grid: rgba(247, 152, 35, 0.05);
+  --map-bg: #0a0f1c;
+  --map-grid: rgba(59, 130, 246, 0.03);
 }
 
 /* ---------- Base Styles ------------- */
@@ -147,18 +140,13 @@ body {
   border: 1px solid var(--border);
   border-radius: 4px;
   font-size: 0.875rem;
-  transition: all 0.3s ease;
-}
-
-.sync-status:hover {
-  border-color: var(--hfc-navy);
 }
 
 .sync-indicator {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--hfc-navy);
+  background: var(--stable);
   animation: pulse 2s infinite;
 }
 
@@ -179,13 +167,11 @@ body {
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  box-shadow: 0 2px 4px rgba(247, 152, 35, 0.2);
 }
 
 .mode-toggle:hover {
   background: var(--accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(247, 152, 35, 0.3);
 }
 
 /* ---------- Main Operations Grid ---------- */
@@ -245,14 +231,14 @@ body {
 }
 
 .team-card:hover {
-  border-color: var(--accent);
+  border-color: var(--border-active);
   transform: translateX(2px);
-  box-shadow: 0 2px 8px rgba(247, 152, 35, 0.1);
 }
 
 .team-card.active {
   border-color: var(--accent);
-  background: rgba(247, 152, 35, 0.1);
+  background: var(--accent);
+  background-opacity: 0.1;
 }
 
 .team-header {
@@ -271,8 +257,7 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--hfc-navy);
-  box-shadow: 0 0 0 2px rgba(23, 102, 153, 0.2);
+  background: var(--stable);
 }
 
 .team-metrics {
@@ -424,7 +409,7 @@ body:not(.dark) .site-marker svg {
 }
 
 .detail-close:hover {
-  color: var(--accent);
+  color: var(--text-primary);
 }
 
 .detail-stats {
@@ -442,10 +427,6 @@ body:not(.dark) .site-marker svg {
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 2px;
-}
-
-.stat-item:hover {
-  border-color: var(--accent);
 }
 
 .stat-label {
@@ -530,12 +511,6 @@ body:not(.dark) .site-marker svg {
   border-color: var(--accent);
 }
 
-.filter-btn:hover:not(.active) {
-  background: var(--bg-tertiary);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
 .activity-feed {
   display: flex;
   flex-direction: column;
@@ -576,9 +551,9 @@ body:not(.dark) .site-marker svg {
 }
 
 .activity-icon.critical { background: var(--critical); color: white; }
-.activity-icon.warning { background: var(--warning); color: white; }
+.activity-icon.warning { background: var(--warning); color: black; }
 .activity-icon.stable { background: var(--stable); color: white; }
-.activity-icon.info { background: var(--hfc-navy); color: white; }
+.activity-icon.info { background: var(--accent); color: white; }
 
 .activity-text {
   color: var(--text-primary);

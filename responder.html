@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SAR Quick-Tap Demo</title>
+  <style>
+    :root {
+      --black: #1a1a1a;
+      --red: #d9534f;
+      --yellow: #f0ad4e;
+      --green: #5cb85c;
+      --tile-bg: #ffffff;
+      --tile-border: #e0e0e0;
+      --font-stack: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+    * {box-sizing: border-box; margin: 0; padding: 0;}
+    body {
+      font-family: var(--font-stack);
+      background: #fafafa;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px;
+      min-height: 100vh;
+    }
+
+    /* GPS banner */
+    .banner {
+      background: var(--green);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    /* Site header */
+    h1 {font-size: 1.6rem; margin-bottom: 12px; text-align: center;}
+
+    /* Casualty tiles */
+    .tile {
+      width: 100%;
+      max-width: 380px;
+      background: var(--tile-bg);
+      border: 2px solid var(--tile-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+    }
+    .tile .icon {font-size: 1.8rem; width: 36px; text-align: center;}
+    .tile .label {flex: 1; font-size: 1.1rem; font-weight: 600; margin-left: 8px;}
+    .tile .controls {display: flex; align-items: center; gap: 8px;}
+    .tile button {
+      width: 36px; height: 36px; font-size: 1.4rem;
+      border: none; border-radius: 8px; background: #ececec; color: #000;
+    }
+    .tile .count {width: 34px; text-align: center; font-size: 1.2rem;}
+
+    /* Update button */
+    #update {
+      width: 100%; max-width: 380px; padding: 14px 0; font-size: 1.2rem;
+      font-weight: 700; border: none; border-radius: 12px; background: var(--green);
+      color: #fff; margin-top: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+      transition: opacity .2s, transform .1s;
+    }
+    #update:disabled {opacity: .6;}
+    #update:not(:disabled):active {transform: scale(.97);} 
+
+    /* Last sync */
+    #last-sync {margin-top: 6px; font-size: .85rem; color: #555;}
+
+    /* Desktop refinements */
+    @media (min-width: 600px){h1{font-size:2rem;} .tile{padding:12px 20px;} .tile .label{font-size:1.25rem;}}
+  </style>
+</head>
+<body>
+  <!-- GPS accuracy banner (placeholder) -->
+  <div class="banner" id="gps-banner">GPS: 5 m ✓</div>
+
+  <!-- Worksite code -->
+  <h1 id="site-code">Site A-12</h1>
+
+  <!-- Casualty category tiles -->
+  <div class="tile" data-cat="dead">
+    <div class="icon">✖︎</div>
+    <div class="label">Dead</div>
+    <div class="controls">
+      <button class="minus" aria-label="minus dead">−</button>
+      <span class="count" id="dead-count">0</span>
+      <button class="plus" aria-label="plus dead">+</button>
+    </div>
+  </div>
+
+  <div class="tile" data-cat="immediate">
+    <div class="icon" style="color:var(--red)">✚</div>
+    <div class="label">Immediate</div>
+    <div class="controls">
+      <button class="minus" aria-label="minus immediate">−</button>
+      <span class="count" id="immediate-count">0</span>
+      <button class="plus" aria-label="plus immediate">+</button>
+    </div>
+  </div>
+
+  <div class="tile" data-cat="delayed">
+    <div class="icon" style="color:var(--yellow)">⚠︎</div>
+    <div class="label">Delayed</div>
+    <div class="controls">
+      <button class="minus" aria-label="minus delayed">−</button>
+      <span class="count" id="delayed-count">0</span>
+      <button class="plus" aria-label="plus delayed">+</button>
+    </div>
+  </div>
+
+  <div class="tile" data-cat="evac">
+    <div class="icon" style="color:var(--green)">🏥</div>
+    <div class="label">Evac</div>
+    <div class="controls">
+      <button class="minus" aria-label="minus evac">−</button>
+      <span class="count" id="evac-count">0</span>
+      <button class="plus" aria-label="plus evac">+</button>
+    </div>
+  </div>
+
+  <!-- Update button -->
+  <button id="update" disabled>UPDATE</button>
+  <div id="last-sync">Last sync: —</div>
+
+<script>
+  // Mockup JS to drive the demo (offline-only)
+  const counts = {dead:0, immediate:0, delayed:0, evac:0};
+  const updateBtn = document.getElementById('update');
+  const lastSync = document.getElementById('last-sync');
+
+  // Attach listeners to plus/minus
+  document.querySelectorAll('.tile').forEach(tile=>{
+    const cat = tile.dataset.cat;
+    const countEl = tile.querySelector('.count');
+    tile.addEventListener('click', e=>{
+      if(e.target.matches('.plus')) counts[cat]++;
+      if(e.target.matches('.minus')) counts[cat] = Math.max(0, counts[cat]-1);
+      countEl.textContent = counts[cat];
+      updateBtn.disabled = false;
+    });
+  });
+
+  // Simple UPDATE behaviour
+  updateBtn.addEventListener('click', ()=>{
+    // Simulate sending and success
+    updateBtn.disabled = true;
+    const now = new Date();
+    lastSync.textContent = 'Last sync: '+ now.toLocaleTimeString();
+    // Small vibration if supported
+    if(navigator.vibrate) navigator.vibrate(150);
+  });
+
+  // Mock GPS accuracy ticker (loop)
+  const gpsBanner = document.getElementById('gps-banner');
+  let accuracy = 5;
+  setInterval(()=>{
+    accuracy = Math.floor(Math.random()*80)+5; // 5–85 m
+    let color = 'var(--green)';
+    if(accuracy>50) color = 'var(--yellow)';
+    if(accuracy>100) color = 'var(--red)';
+    gpsBanner.style.background = color;
+    gpsBanner.textContent = `GPS: ${accuracy} m ✓`;
+  }, 4000);
+</script>
+
+</body>
+</html>

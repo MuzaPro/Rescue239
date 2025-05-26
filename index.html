@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rescue 239 – Rapid Situation Reporting</title>
+  <style>
+    :root {
+      --brand: #124559;
+      --accent: #0b8457;
+      --bg: #f5f7fa;
+      --font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+    * {box-sizing: border-box; margin: 0; padding: 0;}
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--brand);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      padding: 24px 14px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    p.tagline {
+      font-size: 1.05rem;
+      max-width: 460px;
+      margin: 0 auto 22px;
+    }
+    .screenshot {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 12px;
+      box-shadow: 0 10px 18px rgba(0,0,0,.12);
+      margin-bottom: 24px;
+    }
+    .cta {
+      background: var(--accent);
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 700;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 4px 10px rgba(11,132,87,.3);
+      transition: transform .15s;
+    }
+    .cta:active {transform: scale(.97);}
+    footer {
+      margin-top: auto;
+      font-size: .8rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rescue 239 – Rapid Situation Reporting</h1>
+  <p class="tagline">A thumb‑tap web app that lets every search‑and‑rescue team send live casualty counts in under three seconds. Built for Home Front Command • Unit 239.</p>
+
+  <img src="assets/responder_ui_screenshot.jpg" alt="Responder UI screenshot" class="screenshot" loading="lazy">
+
+  <a href="responder.html" class="cta">Launch Interactive Demo</a>
+
+  <footer>
+    Prototype v0.1 — © 2025 Muza Productions
+  </footer>
+</body>
+</html>

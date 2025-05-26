@@ -6,7 +6,6 @@
 
 * readme for github
 
-* landing page with screenshots, context and all the hype
 
 * responder UI needs light mode button
 
@@ -17,3 +16,6 @@
 * technical spike
 
 * development plan and recommendations
+
+
+* landing page with screenshots, context and all the hype

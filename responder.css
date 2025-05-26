@@ -510,3 +510,22 @@ body {
     font-size: 2.5rem;
   }
 }
+
+.demo-switch-button {
+  display: block;
+  background-color: #176699;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: background-color 0.2s;
+}
+
+.demo-switch-button:hover, 
+.demo-switch-button:active {
+  background-color: #26AAFE;
+}

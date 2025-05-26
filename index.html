@@ -2,76 +2,220 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Rescue 239 – Rapid Situation Reporting</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rescue 239 – Rapid Situation Reporting</title>
+  <!-- Tailwind via CDN (remove for production & self‑build) -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --brand: #124559;
-      --accent: #0b8457;
-      --bg: #f5f7fa;
-      --font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    }
-    * {box-sizing: border-box; margin: 0; padding: 0;}
-    body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--brand);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-      padding: 24px 14px;
-      text-align: center;
-    }
-    h1 {
-      font-size: 1.9rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-      line-height: 1.2;
-    }
-    p.tagline {
-      font-size: 1.05rem;
-      max-width: 460px;
-      margin: 0 auto 22px;
-    }
-    .screenshot {
-      width: 100%;
-      max-width: 420px;
-      border-radius: 12px;
-      box-shadow: 0 10px 18px rgba(0,0,0,.12);
-      margin-bottom: 24px;
-    }
-    .cta {
-      background: var(--accent);
-      color: #fff;
-      font-size: 1.15rem;
-      font-weight: 700;
-      padding: 14px 28px;
-      border: none;
-      border-radius: 12px;
-      text-decoration: none;
-      display: inline-block;
-      box-shadow: 0 4px 10px rgba(11,132,87,.3);
-      transition: transform .15s;
-    }
-    .cta:active {transform: scale(.97);}
-    footer {
-      margin-top: auto;
-      font-size: .8rem;
-      color: #666;
-    }
+      :root{
+        --orange:#F79823;
+        --blue-deep:#176699;
+        --blue-light:#26AAFE;
+        --platinum:#E8E8E8;
+      }
+      /* custom scrollbar for desktop */
+      ::-webkit-scrollbar{height:8px;width:8px}
+      ::-webkit-scrollbar-thumb{background:var(--blue-deep);border-radius:4px}
   </style>
 </head>
-<body>
-  <h1>Rescue 239 – Rapid Situation Reporting</h1>
-  <p class="tagline">A thumb‑tap web app that lets every search‑and‑rescue team send live casualty counts in under three seconds. Built for Home Front Command • Unit 239.</p>
+<body class="font-sans bg-black text-platinum scroll-smooth">
 
-  <img src="assets/responder_ui_screenshot.jpg" alt="Responder UI screenshot" class="screenshot" loading="lazy">
+<!-- Sticky Combat Bar -->
+<header class="fixed top-0 inset-x-0 z-50 bg-black/70 backdrop-blur">
+  <div class="max-w-7xl mx-auto flex items-center justify-between p-3">
+    <div class="flex items-center gap-3">
+      <img src="assets/homefront_logo.png" alt="Home Front Command" class="h-8 w-auto">
+      <span class="font-bold text-sm tracking-wide hidden sm:inline text-[var(--platinum)]">Unit 239 • Rescue OPS</span>
+    </div>
+    <a href="responder.html"
+       class="bg-[var(--orange)] text-black font-semibold px-4 py-2 rounded shadow hover:opacity-90 transition">
+      Launch Live Demo
+    </a>
+  </div>
+</header>
 
-  <a href="responder.html" class="cta">Launch Interactive Demo</a>
+<!-- Hero -->
+<section id="hero"
+         class="h-screen flex flex-col justify-center items-center text-center relative pt-16">
+  <div class="absolute inset-0 bg-cover bg-center brightness-50"
+       style="background-image:url('assets/hero_placeholder.jpg');"></div>
+  <div class="relative max-w-xl mx-auto px-4">
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[var(--orange)] leading-tight">
+      Mission‑ready casualty reporting in&nbsp;<span class="whitespace-nowrap">&lt; 3 seconds</span>
+    </h1>
+    <p class="mt-3 text-lg text-[var(--platinum)]">
+      a custom web app for first responders and their direct commander in the field.
+    </p>
+    <p class="mt-6 text-lg sm:text-xl md:text-2xl">
+      Built for IDF&nbsp;Home Front Command, Reserve&nbsp;Unit 239
+    </p>
+    <a href="#solution"
+       class="mt-10 inline-block bg-[var(--orange)] text-black font-bold px-8 py-3 rounded-lg hover:opacity-90 transition">
+       Play Interactive Demo
+    </a>
+  </div>
+</section>
 
-  <footer>
-    Prototype v0.1 — © 2025 Muza Productions
-  </footer>
+<!-- Pain Stats -->
+<section id="pain" class="py-16 bg-[var(--platinum)] text-black">
+  <div class="max-w-6xl mx-auto px-4 grid gap-8 sm:grid-cols-3 text-center">
+    <div>
+      <p class="text-4xl font-extrabold text-[var(--orange)]">8–12&nbsp;min</p>
+      <p class="mt-2">lost per update with legacy methods</p>
+    </div>
+    <div>
+      <p class="text-4xl font-extrabold text-[var(--orange)]">₪250k</p>
+      <p class="mt-2">per proprietary device we don’t get</p>
+    </div>
+    <div>
+      <p class="text-4xl font-extrabold text-[var(--orange)]">24 %</p>
+      <p class="mt-2">data gaps in offline sites</p>
+    </div>
+  </div>
+</section>
+
+<!-- Solution Grid -->
+<section id="solution" class="py-20">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 text-[var(--platinum)]">What Rescue 239 Delivers</h2>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+        <h3 class="font-semibold text-lg mb-2 text-[var(--platinum)]">Tap → Send ≤ 3 s</h3>
+        <p class="text-sm leading-relaxed text-[var(--platinum)]">Zero‑training UI: four buttons, one confirmation vibration.</p>
+      </div>
+      <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+        <h3 class="font-semibold text-lg mb-2 text-[var(--platinum)]">Works Fully Offline</h3>
+        <p class="text-sm leading-relaxed text-[var(--platinum)]">Queue &amp; sync once coverage returns—no data loss.</p>
+      </div>
+      <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+        <h3 class="font-semibold text-lg mb-2 text-[var(--platinum)]">Live Heat‑Map</h3>
+        <p class="text-sm leading-relaxed text-[var(--platinum)]">Commander dashboard updates every second via WebSocket.</p>
+      </div>
+      <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+        <h3 class="font-semibold text-lg mb-2 text-[var(--platinum)]">Military‑grade Crypto</h3>
+        <p class="text-sm leading-relaxed text-[var(--platinum)]">AES‑256 at rest, JWT over HTTPS. Eyes‑only data‑flow.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dual Showcase -->
+<section id="showcase" class="py-20 bg-[var(--platinum)] text-black">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex flex-col md:flex-row gap-10 items-center">
+      <!-- Displays -->
+      <div class="md:w-1/2 space-y-6">
+      <h4 class="font-bold text-lg border-b border-gray-300 pb-2">Field View</h4>
+      <img src="assets\responder_ui_screenshot.jpg" alt="Responder UI" 
+          class="rounded-lg shadow-xl hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] 
+          hover:scale-[1.02] hover:-translate-y-2 hover:brightness-105 
+          transition-all duration-500 mb-8 border border-gray-300/30">
+
+      <h4 class="font-bold text-lg border-b border-gray-300 pb-2 mt-8">Command View</h4>
+      <img src="assets\commander_ui_mockup.jpg" alt="Commander Dashboard" 
+          class="rounded-lg shadow-xl hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] 
+          hover:scale-[1.02] hover:-translate-y-2 hover:brightness-105 
+          transition-all duration-500 border border-gray-300/30"></div>
+      <!-- Two Views Copy -->
+      <div class="md:w-1/2 space-y-6">
+        <h3 class="text-2xl font-bold">Two views, one mission.</h3>
+        <p class="leading-relaxed">
+          Rescuers tap once; commanders receive an instant, color‑coded heat‑map. Both apps ship from the
+          same PWA codebase, keeping updates friction‑free and security tight.
+        </p>
+        <a href="responder.html"
+        class="inline-block bg-[var(--orange)] text-black font-semibold px-4 py-2 rounded shadow hover:opacity-90 transition">
+        Launch Live Demo
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section id="timeline" class="py-20">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 text-[var(--platinum)]">Deployment Timeline (6 Weeks)</h2>
+    <div class="grid gap-8 sm:grid-cols-3 lg:grid-cols-6 text-center">
+      <div class="flex flex-col items-center">
+        <div class="text-xl font-bold text-[var(--orange)]">Week 1</div>
+        <p class="text-sm mt-2 text-[var(--platinum)]">Hi‑fi Figma prototype</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-xl font-bold text-[var(--orange)]">Week 2</div>
+        <p class="text-sm mt-2 text-[var(--platinum)]">Responder PWA shell</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-xl font-bold text-[var(--orange)]">Week 3</div>
+        <p class="text-sm mt-2 text-[var(--platinum)]">API &amp; WebSocket</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-xl font-bold text-[var(--orange)]">Week 4</div>
+        <p class="text-sm mt-2 text-[var(--platinum)]">Commander dashboard</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-xl font-bold text-[var(--orange)]">Week 5</div>
+        <p class="text-sm mt-2 text-[var(--platinum)]">Offline field tests</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-xl font-bold text-[var(--orange)]">Week 6</div>
+        <p class="text-sm mt-2 text-[var(--platinum)]">Security hardening &amp; training deck</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Callouts -->
+<section id="tech" class="py-20 bg-[var(--platinum)] text-black">
+  <div class="max-w-6xl mx-auto px-4 grid gap-10 md:grid-cols-2">
+    <div>
+      <h3 class="text-2xl font-bold mb-4">Lean &amp; Mean</h3>
+      <ul class="list-disc pl-5 space-y-2 text-sm">
+        <li>Single 300 KB JS bundle (after gzip)</li>
+        <li>Installs as PWA; works 100 % offline</li>
+        <li>Zero server cost: Supabase edge functions</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-2xl font-bold mb-4">Security First</h3>
+      <ul class="list-disc pl-5 space-y-2 text-sm">
+        <li>AES‑256 data at rest</li>
+        <li>End‑to‑end TLS 1.3</li>
+        <li>Role‑based JWT auth</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section id="cta" class="py-20 bg-[var(--orange)] text-black text-center">
+  <h2 class="text-3xl sm:text-4xl font-extrabold mb-6">See it in action – decide in five minutes.</h2>
+  <a href="responder.html"
+     class="inline-block bg-black text-[var(--orange)] font-bold px-10 py-4 rounded-lg hover:opacity-90 transition">
+     Launch Live Demo
+  </a>
+</section>
+
+<!-- Footer -->
+<footer class="py-6 text-center text-xs bg-black/90">
+  <p class="text-platinum/80">© 2025 Muza Productions. Prototype – not yet endorsed by the IDF.</p>
+</footer>
+
+<!-- Tab toggle script -->
+<script>
+document.getElementById('tab-field').addEventListener('click',()=>{
+  document.getElementById('img-field').classList.remove('hidden');
+  document.getElementById('img-command').classList.add('hidden');
+  document.getElementById('tab-field').classList.add('bg-[var(--blue-light)]','text-black');
+  document.getElementById('tab-command').classList.remove('bg-[var(--blue-light)]','text-black');
+});
+document.getElementById('tab-command').addEventListener('click',()=>{
+  document.getElementById('img-command').classList.remove('hidden');
+  document.getElementById('img-field').classList.add('hidden');
+  document.getElementById('tab-command').classList.add('bg-[var(--blue-light)]','text-black');
+  document.getElementById('tab-field').classList.remove('bg-[var(--blue-light)]','text-black');
+});
+</script>
+
 </body>
 </html>

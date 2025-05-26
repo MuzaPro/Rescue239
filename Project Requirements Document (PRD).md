@@ -199,11 +199,38 @@ No installs, works offline, encrypts data, minimal UI chrome.
 
 ### A. Colour Tokens
 
-| Token      | Light     | Dark      |
-| ---------- | --------- | --------- |
-| `--bg`     | `#f4f6f9` | `#0e151c` |
-| `--orange` | `#f48b1e` | same      |
-| `--blue`   | `#0068b9` | same      |
+#### Home Front Command Colors
+| Token           | Value      | Usage                      |
+| --------------- | ---------- | -------------------------- |
+| `--hfc-black`   | `#000000`  | Base black                 |
+| `--hfc-platinum`| `#E8E8E8`  | Light gray / platinum      |
+| `--hfc-blue`    | `#26AAFE`  | Light blue accent          |
+| `--hfc-orange`  | `#F79823`  | Primary orange accent      |
+| `--hfc-navy`    | `#176699`  | Deep blue / navy           |
+
+#### Operational Status Colors
+| Token        | Value      | Usage                      |
+| ------------ | ---------- | -------------------------- |
+| `--critical` | `#F79823`  | Orange for critical/X      |
+| `--warning`  | `#26AAFE`  | Blue for warning           |
+| `--stable`   | `#176699`  | Navy for stable            |
+| `--inactive` | `#666666`  | Gray for inactive          |
+
+#### Theme Variables
+| Token            | Light Mode  | Dark Mode   | Usage                     |
+| ---------------- | ----------- | ----------- | ------------------------- |
+| `--bg-primary`   | `#FAFAFA`   | `#0A0A0A`   | Main background           |
+| `--bg-secondary` | `#FFFFFF`   | `#1A1A1A`   | Cards, panels, headers    |
+| `--bg-tertiary`  | `#F6F6F6`   | `#262626`   | Secondary elements        |
+| `--border`       | `#E8E8E8`   | `#333333`   | Default borders           |
+| `--border-active`| `#999999`   | `#4D4D4D`   | Active/hover borders      |
+| `--text-primary` | `#000000`   | `#FFFFFF`   | Main text                 |
+| `--text-secondary`| `#333333`  | `#E8E8E8`   | Secondary text            |
+| `--text-dim`     | `#666666`   | `#999999`   | Less important text       |
+| `--accent`       | `#F79823`   | `#F79823`   | Primary action color      |
+| `--accent-hover` | `#E68A1F`   | `#FFB04D`   | Hover state for accent    |
+| `--map-bg`       | `#F3F4F6`   | `#0F0F0F`   | Map background            |
+| `--map-grid`     | `rgba(0,0,0,0.05)` | `rgba(247,152,35,0.05)` | Map grid lines |
 
 ### B. Glossary
 

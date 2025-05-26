@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RESCUE 239 - TACTICAL OPERATIONS CENTER</title>
+  <link rel="stylesheet" href="commander.css">
+</head>
+<body>
+  <!-- Command Header -->
+  <header class="command-header">
+    <div class="logo-section">
+      <img src="assets/homefront_logo.png" alt="IDF Home Front Command">
+      <div class="unit-id">RESCUE 239</div>
+    </div>
+    
+    <div class="status-grid">
+      <div class="status-item">
+        <div class="status-label">Dead</div>
+        <div class="status-value critical" id="total-x">21</div>
+      </div>
+      <div class="status-item">
+        <div class="status-label">Critical</div>
+        <div class="status-value warning" id="total-crit">43</div>
+      </div>
+      <div class="status-item">
+        <div class="status-label">Stable</div>
+        <div class="status-value stable" id="total-stable">28</div>
+      </div>
+      <div class="status-item">
+        <div class="status-label">Evac-Ready</div>
+        <div class="status-value inactive" id="total-evac">67</div>
+      </div>
+    </div>
+    
+    <div class="header-controls">
+      <div class="sync-status">
+        <div class="sync-indicator"></div>
+        <span id="sync-time">SYNC: 12:47:23</span>
+      </div>
+      <button class="mode-toggle" id="mode-toggle">DARK MODE</button>
+      <button class="mode-toggle" onclick="window.location.href='index.html'">⌂ HOME</button>
+      <button class="mode-toggle" onclick="window.location.href='responder.html'">SWITCH TO RESPONDER</button>
+    </div>
+  </header>
+
+  <!-- Main Operations Grid -->
+  <main class="ops-grid">
+    <!-- Teams Panel -->
+    <section class="teams-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">Active Teams</h2>
+        <span id="team-count">5/5</span>
+      </div>
+      <div class="team-list" id="teams-list"></div>
+    </section>
+
+    <!-- Tactical Map -->
+    <section class="map-container">
+      <div class="map-controls">
+        <div class="panel-title">OPERATIONAL ZONE - SECTOR 7</div>
+        <div>
+          <span style="color: var(--text-dim); font-size: 0.8rem;">GRID: 32.0785N 34.7749E</span>
+        </div>
+      </div>
+      <div class="map-view" id="map">
+        <!-- If you have a map image, uncomment this line -->
+        <img src="assets/map_mockup.jpg" alt="Map Mockup" class="map-image">
+        <div class="map-overlay" id="map-overlay"></div>
+      </div>
+      <div id="team-detail-container"></div>
+    </section>
+
+    <!-- Activity Feed -->
+    <section class="activity-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">Activity Feed</h2>
+      </div>
+      <div class="activity-filters">
+        <button class="filter-btn active" data-filter="all">ALL</button>
+        <button class="filter-btn" data-filter="critical">CRITICAL</button>
+        <button class="filter-btn" data-filter="updates">UPDATES</button>
+      </div>
+      <div class="activity-feed" id="activity-feed"></div>
+    </section>
+  </main>
+
+  <script>
+    // Israeli team names for realism
+    const teamNames = ['Avishai', 'Sigal', 'Yaron', 'Michal', 'Doron'];
+    
+    // Mock data with IDF terminology
+    const teams = [
+      {
+        id: 1,
+        name: teamNames[0],
+        x: 6,  // Changed from "dead" to "x"
+        crit: 12,
+        stable: 5,
+        evac: 31,
+        status: 'active',
+        lastUpdate: '12:46:12',
+        site: 'A',
+        log: [
+          { time: '12:46', msg: 'Located 2 survivors in basement' },
+          { time: '12:43', msg: '+3 critical casualties' },
+          { time: '12:40', msg: 'Structural engineer requested' },
+          { time: '12:35', msg: 'Heavy debris, need crane support' },
+          { time: '12:30', msg: 'Arrived at site A' }
+        ]
+      },
+      {
+        id: 2,
+        name: teamNames[1],
+        x: 4,
+        crit: 13,
+        stable: 8,
+        evac: 15,
+        status: 'active',
+        lastUpdate: '12:45:55',
+        site: 'B',
+        log: [
+          { time: '12:45', msg: 'Medical team on site' },
+          { time: '12:42', msg: 'Gas leak detected, area secured' },
+          { time: '12:38', msg: '+2 X confirmed' },
+          { time: '12:33', msg: 'K9 unit deployed' },
+          { time: '12:28', msg: 'Site B perimeter established' }
+        ]
+      },
+      {
+        id: 3,
+        name: teamNames[2],
+        x: 3,
+        crit: 11,
+        stable: 10,
+        evac: 20,
+        status: 'active',
+        lastUpdate: '12:47:02',
+        site: 'C',
+        log: [
+          { time: '12:47', msg: 'Evac complete for 5 stable' },
+          { time: '12:44', msg: 'Secondary collapse risk identified' },
+          { time: '12:40', msg: 'Thermal imaging shows 3 heat signatures' },
+          { time: '12:35', msg: 'Initial triage complete' },
+          { time: '12:31', msg: 'Team operational at site C' }
+        ]
+      },
+      {
+        id: 4,
+        name: teamNames[3],
+        x: 5,
+        crit: 4,
+        stable: 3,
+        evac: 1,
+        status: 'active',
+        lastUpdate: '12:44:30',
+        site: 'D',
+        log: [
+          { time: '12:44', msg: 'Requesting additional medical supplies' },
+          { time: '12:41', msg: 'Building partially collapsed' },
+          { time: '12:37', msg: '+1 critical, immediate evac needed' },
+          { time: '12:32', msg: 'Access route cleared' },
+          { time: '12:27', msg: 'Team arriving at site D' }
+        ]
+      },
+      {
+        id: 5,
+        name: teamNames[4],
+        x: 3,
+        crit: 3,
+        stable: 2,
+        evac: 0,
+        status: 'active',
+        lastUpdate: '12:46:45',
+        site: 'E',
+        log: [
+          { time: '12:46', msg: 'Hazmat team requested' },
+          { time: '12:43', msg: 'Chemical storage area identified' },
+          { time: '12:39', msg: 'Initial sweep complete' },
+          { time: '12:34', msg: 'Team establishing command post' },
+          { time: '12:29', msg: 'En route to site E' }
+        ]
+      }
+    ];
+
+    const sites = [
+      { code: 'A', x: 25, y: 35, team: 1 },
+      { code: 'B', x: 60, y: 20, team: 2 },
+      { code: 'C', x: 80, y: 45, team: 3 },
+      { code: 'D', x: 40, y: 70, team: 4 },
+      { code: 'E', x: 70, y: 75, team: 5 }
+    ];
+
+    const activityLog = [
+      { time: '12:47', icon: 'critical', type: 'X', text: 'Team Yaron: Secondary collapse warning' },
+      { time: '12:46', icon: 'stable', type: '+', text: 'Team Avishai: 2 survivors located' },
+      { time: '12:46', icon: 'info', type: 'i', text: 'Team Doron: Hazmat team requested' },
+      { time: '12:45', icon: 'warning', type: '!', text: 'Team Sigal: Gas leak detected' },
+      { time: '12:44', icon: 'warning', type: '!', text: 'Team Michal: Medical supplies low' },
+      { time: '12:43', icon: 'critical', type: 'X', text: 'Team Sigal: +2 X confirmed' },
+      { time: '12:42', icon: 'info', type: 'i', text: 'All teams operational' },
+      { time: '12:40', icon: 'warning', type: '!', text: 'Team Avishai: Structural engineer needed' },
+      { time: '12:38', icon: 'stable', type: '+', text: 'Team Yaron: 5 stable evacuated' },
+      { time: '12:35', icon: 'info', type: 'i', text: 'Operation RESCUE 239 commenced' }
+    ];
+
+    // Initialize UI
+    function init() {
+      renderTeams();
+      renderMap();
+      renderActivityFeed();
+      startClock();
+      updateTotals();
+      
+      // Dark mode toggle
+      const modeToggle = document.getElementById('mode-toggle');
+      modeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        modeToggle.textContent = document.body.classList.contains('dark') ? 'LIGHT MODE' : 'DARK MODE';
+      });
+      
+      // Filter buttons
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          // Filter logic would go here
+        });
+      });
+    }
+
+    function renderTeams() {
+      const container = document.getElementById('teams-list');
+      container.innerHTML = teams.map(team => `
+        <div class="team-card" data-team-id="${team.id}">
+          <div class="team-header">
+            <span class="team-id">Team ${team.name}</span>
+            <div class="team-status"></div>
+          </div>
+          <div class="team-metrics">
+            <div class="metric">
+              <div class="metric-value critical">${team.x}</div>
+              <div class="metric-label">X</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value warning">${team.crit}</div>
+              <div class="metric-label">CRIT</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value stable">${team.stable}</div>
+              <div class="metric-label">STBL</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value inactive">${team.evac}</div>
+              <div class="metric-label">EVAC</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      
+      // Add click handlers
+      document.querySelectorAll('.team-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const teamId = parseInt(card.dataset.teamId);
+          showTeamDetail(teamId);
+          
+          // Update active state
+          document.querySelectorAll('.team-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+        });
+      });
+    }
+
+    function renderMap() {
+      const overlay = document.getElementById('map-overlay');
+      overlay.innerHTML = sites.map(site => {
+        const team = teams.find(t => t.id === site.team);
+        const total = team.x + team.crit + team.stable + team.evac;
+        const urgency = team.crit / total;
+        const color = urgency > 0.3 ? 'var(--critical)' : urgency > 0.1 ? 'var(--warning)' : 'var(--stable)';
+        
+        return `
+          <div class="site-marker" style="left: ${site.x}%; top: ${site.y}%;" data-site="${site.code}">
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              <circle cx="30" cy="30" r="20" fill="none" stroke="${color}" stroke-width="3" opacity="0.8"/>
+              <circle cx="30" cy="30" r="15" fill="${color}" opacity="0.2"/>
+              <text x="30" y="35" text-anchor="middle" fill="var(--text-primary)" font-size="16" font-weight="700">
+                ${site.code}
+              </text>
+            </svg>
+            <div class="site-label">
+              ${team.x}/${team.crit}/${team.stable}/${team.evac}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function showTeamDetail(teamId) {
+      const team = teams.find(t => t.id === teamId);
+      if (!team) return;
+      
+      const container = document.getElementById('team-detail-container');
+      container.innerHTML = `
+        <div class="team-detail">
+          <div class="detail-header">
+            <h3 class="detail-title">Team ${team.name} - Site ${team.site}</h3>
+            <button class="detail-close" onclick="closeTeamDetail()">×</button>
+          </div>
+          <div class="detail-stats">
+            <div class="stat-item">
+              <span class="stat-label">Last Update</span>
+              <span class="stat-value">${team.lastUpdate}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Total Casualties</span>
+              <span class="stat-value">${team.x + team.crit + team.stable + team.evac}</span>
+            </div>
+          </div>
+          <div class="team-log">
+            <h4 class="log-header">Operation Log</h4>
+            <div class="log-entries">
+              ${team.log.map(entry => `
+                <div class="log-entry">
+                  <span class="log-time">${entry.time}</span>
+                  <span>${entry.msg}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function closeTeamDetail() {
+      document.getElementById('team-detail-container').innerHTML = '';
+      document.querySelectorAll('.team-card').forEach(c => c.classList.remove('active'));
+    }
+
+    function renderActivityFeed() {
+      const feed = document.getElementById('activity-feed');
+      feed.innerHTML = activityLog.map(item => `
+        <div class="activity-item">
+          <span class="activity-time">${item.time}</span>
+          <div class="activity-icon ${item.icon}">${item.type}</div>
+          <span class="activity-text">${item.text}</span>
+        </div>
+      `).join('');
+    }
+
+    function updateTotals() {
+      let totals = { x: 0, crit: 0, stable: 0, evac: 0 };
+      teams.forEach(team => {
+        totals.x += team.x;
+        totals.crit += team.crit;
+        totals.stable += team.stable;
+        totals.evac += team.evac;
+      });
+      
+      document.getElementById('total-x').textContent = totals.x;
+      document.getElementById('total-crit').textContent = totals.crit;
+      document.getElementById('total-stable').textContent = totals.stable;
+      document.getElementById('total-evac').textContent = totals.evac;
+    }
+
+    function startClock() {
+      function updateTime() {
+        const now = new Date();
+        const time = now.toTimeString().split(' ')[0];
+        document.getElementById('sync-time').textContent = `SYNC: ${time}`;
+      }
+      updateTime();
+      setInterval(updateTime, 1000);
+    }
+
+    // Initialize on load
+    init();
+  </script>
+</body>
+</html>

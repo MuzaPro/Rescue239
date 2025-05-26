@@ -2,11 +2,526 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>RESCUE 239 - TACTICAL OPERATIONS CENTER</title>
   <link rel="stylesheet" href="commander.css">
+  <style>
+    /* ========== MOBILE RESPONSIVE STYLES ========== */
+    
+    /* Hide mobile elements by default */
+    .splash-screen,
+    .pull-to-refresh,
+    .mobile-tabs {
+      display: none;
+    }
+    
+    /* ---------- Pull to Refresh ---------- */
+    .pull-to-refresh {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+      transition: top 0.3s ease;
+      box-shadow: 0 4px 12px rgba(247, 152, 35, 0.3);
+    }
+    
+    .pull-to-refresh.visible {
+      top: 20px;
+    }
+    
+    .ptr-spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* ---------- Mobile Tab Navigation ---------- */
+    .mobile-tabs {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-secondary);
+      border-top: 2px solid var(--accent);
+      z-index: 1000;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 8px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .tab-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent);
+      transform: translateY(-100%);
+      transition: transform 0.3s ease;
+    }
+    
+    .tab-btn.active {
+      color: var(--accent);
+    }
+    
+    .tab-btn.active::before {
+      transform: translateY(0);
+    }
+    
+    .tab-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .tab-btn svg {
+      width: 24px;
+      height: 24px;
+      stroke-width: 2;
+      transition: transform 0.3s ease;
+    }
+    
+    .tab-btn.active svg {
+      transform: scale(1.1);
+    }
+    
+    /* ---------- Mobile Panel Switching ---------- */
+    @media (max-width: 768px) {
+      .panel {
+        display: none !important;
+        animation: slideIn 0.3s ease-out;
+      }
+      
+      .panel.active {
+        display: block !important;
+      }
+      
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+    }
+    
+    /* ---------- RGB variables for backdrop filter ---------- */
+    :root {
+      --bg-secondary-rgb: 255, 255, 255;
+    }
+    
+    body.dark {
+      --bg-secondary-rgb: 26, 26, 26;
+    }
+    
+    /* ---------- Mobile Splash Screen ---------- */
+    .splash-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-primary);
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeOut 0.5s ease-out 2s forwards;
+    }
+    
+    .splash-logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    .splash-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    
+    .splash-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+    
+    /* ---------- Mobile Layout Adjustments ---------- */
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: 60px; /* Space for tab nav */
+      }
+      
+      /* Show mobile elements */
+      .splash-screen {
+        display: flex;
+      }
+      
+      .mobile-tabs {
+        display: flex;
+      }
+      
+      .pull-to-refresh {
+        display: flex;
+      }
+      
+      /* Mobile Header */
+      .command-header {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 8px 12px;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        backdrop-filter: blur(10px);
+        background: rgba(var(--bg-secondary-rgb), 0.95);
+      }
+      
+      .logo-section {
+        justify-content: center;
+      }
+      
+      .logo-section img {
+        width: 32px;
+        height: 32px;
+      }
+      
+      .unit-id {
+        font-size: 1rem;
+      }
+      
+      .status-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        padding: 8px 0;
+        background: var(--bg-tertiary);
+        border-radius: 8px;
+        margin: 0 -4px;
+      }
+      
+      .status-label {
+        font-size: 0.65rem;
+      }
+      
+      .status-value {
+        font-size: 1.2rem;
+      }
+      
+      .header-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+      
+      .sync-status {
+        order: -1;
+        width: 100%;
+        justify-content: center;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+      
+      .mode-toggle {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+      
+      /* Hide desktop-only buttons on mobile */
+      .mode-toggle:nth-child(3),
+      .mode-toggle:nth-child(4) {
+        display: none;
+      }
+      
+      /* Main Grid */
+      .ops-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        height: calc(100vh - 180px); /* Account for header and tab nav */
+        overflow: hidden;
+      }
+      
+      /* Teams Panel Mobile */
+      .teams-panel {
+        padding: 12px;
+        height: 100%;
+        overflow-y: auto;
+      }
+      
+      .team-card {
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .team-card:active {
+        transform: scale(0.98);
+      }
+      
+      .team-metrics {
+        gap: 12px;
+        margin-top: 12px;
+      }
+      
+      .metric-value {
+        font-size: 1.2rem;
+      }
+      
+      /* Map Container Mobile */
+      .map-container {
+        height: 100%;
+        border: none;
+      }
+      
+      .map-view {
+        height: calc(100% - 60px);
+        touch-action: pan-x pan-y;
+      }
+      
+      .site-marker {
+        touch-action: manipulation;
+      }
+      
+      .site-marker:active {
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+      
+      .site-label {
+        font-size: 0.7rem;
+        padding: 6px 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+      
+      /* Team Detail Mobile */
+      .team-detail {
+        position: fixed;
+        bottom: 60px;
+        left: 0;
+        right: 0;
+        margin: 0;
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+        max-height: 70vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease-out;
+        backdrop-filter: blur(10px);
+        background: rgba(var(--bg-secondary-rgb), 0.95);
+      }
+      
+      .team-detail::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: var(--border-active);
+        border-radius: 2px;
+      }
+      
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+      
+      .detail-header {
+        padding-top: 20px;
+      }
+      
+      .detail-close {
+        font-size: 1.5rem;
+        padding: 8px 12px;
+        background: var(--bg-tertiary);
+        border-radius: 4px;
+      }
+      
+      .log-entries {
+        max-height: 200px;
+      }
+      
+      /* Activity Panel Mobile */
+      .activity-panel {
+        padding: 12px;
+        height: 100%;
+        overflow-y: auto;
+      }
+      
+      .activity-filters {
+        position: sticky;
+        top: 0;
+        background: var(--bg-secondary);
+        z-index: 10;
+        padding: 8px 0;
+        margin: -8px -12px 12px;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      
+      .filter-btn {
+        flex: 1;
+        padding: 8px 12px;
+      }
+      
+      .activity-item {
+        padding: 12px;
+        margin-bottom: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+      }
+      
+      .activity-item:active {
+        transform: scale(0.98);
+      }
+    }
+    
+    /* ---------- Small Mobile Adjustments ---------- */
+    @media (max-width: 380px) {
+      .status-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .team-metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .tab-btn span {
+        font-size: 0.65rem;
+      }
+      
+      .tab-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    
+    /* ---------- Landscape Mobile ---------- */
+    @media (max-width: 768px) and (orientation: landscape) {
+      .command-header {
+        position: relative;
+      }
+      
+      .status-grid {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: auto;
+        margin: 0;
+      }
+      
+      .ops-grid {
+        height: calc(100vh - 80px);
+      }
+      
+      .mobile-tabs {
+        padding: 4px 0;
+      }
+      
+      .tab-btn {
+        padding: 8px;
+      }
+    }
+    
+    /* ---------- Touch Optimizations ---------- */
+    @media (hover: none) and (pointer: coarse) {
+      .team-card,
+      .activity-item,
+      .filter-btn,
+      .mode-toggle {
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      .team-card:hover,
+      .activity-item:hover {
+        transform: none;
+      }
+    }
+    
+    /* ---------- iOS Safe Areas ---------- */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .mobile-tabs {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      
+      body {
+        padding-bottom: calc(60px + env(safe-area-inset-bottom));
+      }
+    }
+    
+    /* ---------- Performance Optimizations ---------- */
+    @media (max-width: 768px) {
+      * {
+        -webkit-transform: translateZ(0);
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .panel {
+        will-change: transform;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Mobile Splash Screen -->
+  <div class="splash-screen">
+    <img src="assets/homefront_logo.png" alt="IDF Home Front Command" class="splash-logo">
+    <div class="splash-title">RESCUE 239</div>
+    <div class="splash-subtitle">Tactical Operations Center</div>
+  </div>
+  
+  <!-- Pull to Refresh Indicator -->
+  <div class="pull-to-refresh">
+    <div class="ptr-spinner"></div>
+  </div>
+
   <!-- Command Header -->
   <header class="command-header">
     <div class="logo-section">
@@ -44,10 +559,37 @@
     </div>
   </header>
 
+  <!-- Mobile Tab Navigation -->
+  <nav class="mobile-tabs">
+    <button class="tab-btn active" data-tab="teams">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      <span>Teams</span>
+    </button>
+    <button class="tab-btn" data-tab="map">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
+      <span>Map</span>
+    </button>
+    <button class="tab-btn" data-tab="activity">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M12 2v20"></path>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      </svg>
+      <span>Activity</span>
+    </button>
+  </nav>
+
   <!-- Main Operations Grid -->
   <main class="ops-grid">
     <!-- Teams Panel -->
-    <section class="teams-panel">
+    <section class="teams-panel panel" data-panel="teams">
       <div class="panel-header">
         <h2 class="panel-title">Active Teams</h2>
         <span id="team-count">5/5</span>
@@ -56,7 +598,7 @@
     </section>
 
     <!-- Tactical Map -->
-    <section class="map-container">
+    <section class="map-container panel" data-panel="map">
       <div class="map-controls">
         <div class="panel-title">OPERATIONAL ZONE - SECTOR 7</div>
         <div>
@@ -72,7 +614,7 @@
     </section>
 
     <!-- Activity Feed -->
-    <section class="activity-panel">
+    <section class="activity-panel panel" data-panel="activity">
       <div class="panel-header">
         <h2 class="panel-title">Activity Feed</h2>
       </div>
@@ -227,6 +769,128 @@
           // Filter logic would go here
         });
       });
+      
+      // Mobile tab navigation
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const panels = document.querySelectorAll('.panel');
+      
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetTab = btn.dataset.tab;
+          
+          // Update active tab
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          // Show corresponding panel
+          panels.forEach(panel => {
+            if (panel.dataset.panel === targetTab) {
+              panel.classList.add('active');
+            } else {
+              panel.classList.remove('active');
+            }
+          });
+        });
+      });
+      
+      // Set initial active panel
+      document.querySelector('.panel[data-panel="teams"]').classList.add('active');
+      
+      // Touch gestures for mobile tab swiping
+      let touchStartX = 0;
+      let touchEndX = 0;
+      let currentTabIndex = 0;
+      const tabOrder = ['teams', 'map', 'activity'];
+      
+      document.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+      
+      document.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      });
+      
+      function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+          if (diff > 0 && currentTabIndex < tabOrder.length - 1) {
+            // Swipe left - next tab
+            currentTabIndex++;
+          } else if (diff < 0 && currentTabIndex > 0) {
+            // Swipe right - previous tab
+            currentTabIndex--;
+          }
+          
+          // Activate the new tab
+          const newTab = tabOrder[currentTabIndex];
+          const tabBtn = document.querySelector(`.tab-btn[data-tab="${newTab}"]`);
+          if (tabBtn) {
+            tabBtn.click();
+          }
+        }
+      }
+      
+      // Update current tab index when tabs are clicked
+      tabBtns.forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+          currentTabIndex = index;
+        });
+      });
+      
+      // Pull to refresh
+      let pullStartY = 0;
+      let isPulling = false;
+      
+      document.addEventListener('touchstart', e => {
+        const touch = e.touches[0];
+        pullStartY = touch.clientY;
+        isPulling = window.scrollY === 0;
+      });
+      
+      document.addEventListener('touchmove', e => {
+        if (!isPulling) return;
+        
+        const touch = e.touches[0];
+        const pullDistance = touch.clientY - pullStartY;
+        
+        if (pullDistance > 0 && pullDistance < 150) {
+          const ptr = document.querySelector('.pull-to-refresh');
+          if (pullDistance > 80) {
+            ptr.classList.add('visible');
+          } else {
+            ptr.classList.remove('visible');
+          }
+        }
+      });
+      
+      document.addEventListener('touchend', e => {
+        const ptr = document.querySelector('.pull-to-refresh');
+        if (ptr.classList.contains('visible')) {
+          // Simulate refresh
+          setTimeout(() => {
+            ptr.classList.remove('visible');
+            updateTotals();
+            renderActivityFeed();
+            // Haptic feedback if available
+            if (navigator.vibrate) {
+              navigator.vibrate(50);
+            }
+          }, 1000);
+        }
+        isPulling = false;
+      });
+      
+      // Add haptic feedback to buttons
+      document.querySelectorAll('button, .team-card, .activity-item').forEach(el => {
+        el.addEventListener('click', () => {
+          if (navigator.vibrate) {
+            navigator.vibrate(10);
+          }
+        });
+      });
     }
 
     function renderTeams() {
@@ -294,6 +958,19 @@
           </div>
         `;
       }).join('');
+      
+      // Add click handlers for mobile
+      if (window.innerWidth <= 768) {
+        document.querySelectorAll('.site-marker').forEach(marker => {
+          marker.addEventListener('click', () => {
+            const siteCode = marker.dataset.site;
+            const site = sites.find(s => s.code === siteCode);
+            if (site) {
+              showTeamDetail(site.team);
+            }
+          });
+        });
+      }
     }
 
     function showTeamDetail(teamId) {

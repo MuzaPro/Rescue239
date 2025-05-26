@@ -2,7 +2,7 @@
 
 **Product Name:** Rescue 239 – Rapid Situation Reporting Suite  
 **Version:** 0.1  
-**Last updated:** {{TODAY}}
+**Last updated:** May 26 2025
 
 ---
 
@@ -19,7 +19,7 @@ The suite ships as two web apps (same codebase, different routes):
 | App            | Primary user  | Device                               | Key action time‑budget                         |
 | -------------- | ------------- | ------------------------------------ | ---------------------------------------------- |
 | `/#/responder` | Field rescuer | Any modern Android/iOS browser (PWA) | Tap → Send ≤ 3 s                               |
-| `/#/commander` | Command post  | Laptop + projector                   | 1‑glance situational awareness (≤ 2 s refresh) |
+| `/#/commander` | Command post  | Mobile/ Laptop                       | 1‑glance situational awareness (≤ 2 s refresh) |
 
 No installs, works offline, encrypts data, minimal UI chrome.
 

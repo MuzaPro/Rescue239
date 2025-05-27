@@ -4,7 +4,7 @@
 
 > **Status:** Proof‑of‑concept · UI mock‑up · Looking for contributors  
 > **Goal:** Provide IDF Reserve Unit 239 with a lightweight, offline‑capable casualty & asset reporting tool that runs on any soldier’s phone or laptop.
-
+![Mobile mock‑up of Rescue 239](assets/commander_ui_mockup2.jpg)
 ---
 
 ## 📜 Project Overview

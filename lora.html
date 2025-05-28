@@ -1,0 +1,167 @@
+<!-- lora.html  –  Rescue 239 “No-Cell” Contingency Concept -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rescue 239 · LoRa Emergency Workflow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --orange:#F79823;
+      --blue-deep:#176699;
+      --platinum:#E8E8E8;
+    }
+  </style>
+</head>
+<body class="bg-white text-black font-sans scroll-smooth">
+
+<!-- Top Bar (same as main site) -->
+<header class="fixed top-0 inset-x-0 z-50 bg-black/70 backdrop-blur">
+  <div class="max-w-7xl mx-auto flex items-center justify-between p-3 text-white">
+    <a href="index.html" class="flex items-center gap-3">
+      <img src="assets/homefront_logo.png" alt="Home Front Command" class="h-8" />
+      <span class="hidden sm:inline text-sm font-bold tracking-wide">Rescue 239 / LoRa Plan B</span>
+    </a>
+    <a href="responder.html"
+       class="bg-[var(--orange)] text-black font-semibold px-4 py-2 rounded shadow hover:opacity-90 transition">
+      Try Main Demo
+    </a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="pt-24 pb-16 text-center bg-[var(--platinum)]">
+  <h1 class="text-4xl sm:text-5xl font-extrabold mb-4">
+    When Towers Fall, <span class="text-[var(--orange)]">LoRa Stands</span>
+  </h1>
+  <p class="max-w-3xl mx-auto text-lg sm:text-xl">
+    A pocket-size mesh network that lets every responder keep using the familiar
+    <em>Rescue 239</em> app — minus the cellular dependency.
+  </p>
+</section>
+
+<!-- How It Works -->
+<section class="py-20">
+  <div class="max-w-6xl mx-auto px-4 grid gap-12 lg:grid-cols-2 items-center">
+    <!-- Diagram -->
+    <img src="assets/lora-network-diagram.jpg"
+         alt="LoRa fallback schematic"
+         class="w-full h-auto rounded-lg shadow-md">
+
+    <!-- Explanation -->
+    <div class="space-y-6">
+      <h2 class="text-3xl font-bold">Step-by-Step Workflow</h2>
+      <ol class="list-decimal pl-5 space-y-3">
+        <li><strong>Grab &amp; Go Box.</strong> Two pre-assigned unit members store a shoebox
+            with <span class="text-[var(--orange)]">8-12</span> LoRa nodes at home.</li>
+        <li><strong>Rapid Station Setup.</strong> On arrival, they place a central node on a
+            tripod, power it with any USB-C power bank, and flip it on.</li>
+        <li><strong>Bluetooth Pairing.</strong> Responders pass the station, tap “Pair” in the
+            app; phone ↔ node handshake takes&nbsp;<1 min.</li>
+        <li><strong>Mesh Online.</strong> Every report now travels over LoRa mesh to the
+            commander laptop - GPS, text, and status intact.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits -->
+<section class="py-20 bg-[var(--platinum)]">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">
+      Why This Backup Wins
+    </h2>
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="p-6 bg-white rounded-xl border border-gray-200">
+        <h3 class="font-semibold text-lg mb-2">Full GPS & UI</h3>
+        <p class="text-sm">Phones keep their friendly UI and GPS hardware-
+           satellites never go offline with the towers.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-gray-200">
+        <h3 class="font-semibold text-lg mb-2">18 650-powered</h3>
+        <p class="text-sm">Nodes sip <1 W; a single 3 000 mAh cell runs
+           ~24 h. Plug any power bank for multi-day ops.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-gray-200">
+        <h3 class="font-semibold text-lg mb-2">Mesh Range ×3</h3>
+        <p class="text-sm">Each relay hop boosts coverage; hilltop node
+           reaches 2–5 km LOS on 433 MHz in Israel’s licence-free band.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-gray-200">
+        <h3 class="font-semibold text-lg mb-2">Open-Source Core</h3>
+        <p class="text-sm">Powered by <a href="https://meshtastic.org" class="text-[var(--blue-deep)] underline">Meshtastic</a>,
+           audited by a global hobbyist & SAR community.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-gray-200">
+        <h3 class="font-semibold text-lg mb-2">Sub ₪350 / Node</h3>
+        <p class="text-sm">LILYGO T-Beam @ 433 MHz retails ~US$80 /
+           ₪290; bulk buys cut that further.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl border border-gray-200">
+        <h3 class="font-semibold text-lg mb-2">12-48 h Bridge</h3>
+        <p class="text-sm">Keeps data flowing until large-scale IDF
+           comms arrive- then nodes become redundancy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Hardware Specs -->
+<section class="py-20">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-2xl font-bold mb-6">Reference Hardware · Lilygo T-Beam 433 MHz</h2>
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="bg-[var(--orange)] text-black">
+          <th class="p-2 text-left">Spec</th>
+          <th class="p-2 text-left">Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b">
+          <td class="p-2">Bands / Output</td>
+          <td class="p-2">433 MHz @ +20 dBm (legal in IL licence-free band)</td>
+        </tr>
+        <tr class="border-b bg-[var(--platinum)]">
+          <td class="p-2">Battery</td>
+          <td class="p-2">1× 18 650 Li-ion (removable)</td>
+        </tr>
+        <tr class="border-b">
+          <td class="p-2">Interfaces</td>
+          <td class="p-2">Bluetooth LE & USB-C serial</td>
+        </tr>
+        <tr class="border-b bg-[var(--platinum)]">
+          <td class="p-2">Firmware</td>
+          <td class="p-2">Meshtastic v2.x (open source)</td>
+        </tr>
+        <tr>
+          <td class="p-2">Unit Cost</td>
+          <td class="p-2">&lt; US$90 retail (bulk orders → US$70)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-20 bg-[var(--orange)] text-black text-center">
+  <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">
+    Ready to Pilot the LoRa Drop-Kit?
+  </h2>
+  <p class="max-w-xl mx-auto mb-8">
+    We’ll field-test with one squad this quarter — cost under ₪5 k including spares.
+  </p>
+  <a href="mailto:info@muzascience.com?subject=LoRa%20Pilot"
+     class="inline-block bg-black text-[var(--orange)] font-bold px-10 py-4 rounded-lg hover:opacity-90 transition">
+     Contact for Pilot Proposal
+  </a>
+</section>
+
+<!-- Footer -->
+<footer class="py-6 text-center text-xs bg-black/90 text-white/80">
+  © 2025 Muza Productions · Prototype concept — not yet IDF endorsed.
+</footer>
+
+</body>
+</html>
